@@ -1,13 +1,13 @@
 import React, {useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { getAllUsers} from '../services/UserService';
 
 const ListUserComponent = () => {
 
     const [users, setUsers] = useState([]);
 
-
     const navigator = useNavigate();
+
 
     useEffect( () => {
         getAllUsers().then((response) => {
@@ -15,6 +15,11 @@ const ListUserComponent = () => {
             setUsers(response.data);
         }).catch(error => console.error(error));
     } , [])
+
+
+    function updateUser(id) {
+        navigator(`/edit-user/${id}`)
+    }
 
 
   return (
@@ -31,6 +36,7 @@ const ListUserComponent = () => {
                       <th>Email</th>
                       <th>Password</th>
                       <th>Username</th>
+                      <th>Actions</th>
                   </tr>
               </thead>
               <tbody>
@@ -44,6 +50,9 @@ const ListUserComponent = () => {
                               <td>{user.email}</td>
                               <td>{user.password}</td>
                               <td>{user.username}</td>
+                              <td>
+                                <button onClick={() => updateUser(user.id)} className='btn btn-info'>Update</button>
+                              </td>
                           </tr>
                       )
                   }
