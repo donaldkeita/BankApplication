@@ -1,5 +1,5 @@
 import React, {useState, useEffect } from 'react'
-import { createUser, getUserById } from '../services/UserService';
+import { createUser, getUserById, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UserComponent = () => {
@@ -28,17 +28,25 @@ const UserComponent = () => {
     
   }, [id])
 
-  function saveUser(e) {
+  function saveOrUpdateUser(e) {
     e.preventDefault();
 
     const user = {firstName, lastName, userType, email, password, username}
 
     console.log(user);
 
-    createUser(user).then((response) => {
-      console.log(response.data);
-      navigator('/users')
-    }).catch(error => console.error(error))
+    if(id) {
+      updateUser(id, user).then((response) => {
+        console.log(response.data)
+        navigator('/users');
+      }).catch((error) => console.error(error))
+    }
+    else {
+      createUser(user).then((response) => {
+        console.log(response.data);
+        navigator('/users')
+      }).catch(error => console.error(error))
+    }
   }
 
   function pageTitle() {
@@ -155,7 +163,7 @@ const UserComponent = () => {
                   onChange={(e) => setPassword(e.target.value)}></input>
               </div>
 
-              <button type="submit" className="btn btn-success mb-2" onClick={(e) => saveUser(e)}>Submit</button>
+              <button type="submit" className="btn btn-success mb-2" onClick={(e) => saveOrUpdateUser(e)}>Submit</button>
             </form>
 
           </div>

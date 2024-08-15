@@ -1,6 +1,6 @@
 import React, {useState, useEffect } from 'react'
-import { useNavigate, Link, useParams } from 'react-router-dom';
-import { getAllUsers} from '../services/UserService';
+import { useNavigate, Link} from 'react-router-dom';
+import { getAllUsers, deleteUser} from '../services/UserService';
 
 const ListUserComponent = () => {
 
@@ -10,15 +10,26 @@ const ListUserComponent = () => {
 
 
     useEffect( () => {
+        displayUsers();
+    } , [])
+
+
+    function displayUsers() {
         getAllUsers().then((response) => {
             console.log(response.data);
             setUsers(response.data);
         }).catch(error => console.error(error));
-    } , [])
-
+    }
 
     function updateUser(id) {
         navigator(`/edit-user/${id}`)
+    }
+
+    function removeUser(id) {
+        deleteUser(id).then((response) => {
+            console.log(response.data);
+            displayUsers();
+        }).catch((error) => console.log(error));
     }
 
 
@@ -52,6 +63,8 @@ const ListUserComponent = () => {
                               <td>{user.username}</td>
                               <td>
                                 <button onClick={() => updateUser(user.id)} className='btn btn-info'>Update</button>
+                                <button onClick={() => removeUser(user.id)} className='btn btn-danger'
+                                    style={{marginLeft: "10px"}}>Delete</button>
                               </td>
                           </tr>
                       )
