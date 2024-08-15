@@ -50,7 +50,6 @@ const UserComponent = () => {
     }
   }
 
-  const useEffect = (id) => {}
 
   return (
     <div className='container'>
