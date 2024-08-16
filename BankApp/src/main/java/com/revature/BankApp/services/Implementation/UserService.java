@@ -7,6 +7,7 @@ import com.revature.BankApp.enumerations.UserType;
 import com.revature.BankApp.exceptions.ResourceNotFoundException;
 import com.revature.BankApp.mappers.AddressMapper;
 import com.revature.BankApp.mappers.UserMapper;
+import com.revature.BankApp.repositories.AddressRepository;
 import com.revature.BankApp.repositories.UserRepository;
 import com.revature.BankApp.services.UserInterface;
 import lombok.AllArgsConstructor;
@@ -21,9 +22,17 @@ public class UserService implements UserInterface {
 
     private UserRepository userRepository;
 
+    private AddressRepository addressRepository;
+
     @Override
     public UserDto createUser(UserDto userDto) {
         User user = UserMapper.mapToUser(userDto);
+
+        Address address = addressRepository.findById(userDto.getAddressId())
+                .orElseThrow(() -> new ResourceNotFoundException("Address is not exists with id: " +  + userDto.getAddressId()));
+
+        user.setAddress(address);
+
         User savedUser = userRepository.save(user);
         return UserMapper.mapToUserDto(savedUser);
     }
@@ -32,7 +41,7 @@ public class UserService implements UserInterface {
     public UserDto getUserById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User is not exists with given id : " + userId));
+                        new ResourceNotFoundException("User is not exists with given id: " + userId));
 
         return UserMapper.mapToUserDto(user);
     }
@@ -56,6 +65,11 @@ public class UserService implements UserInterface {
         user.setEmail(updatedUser.getEmail());
         user.setPassword(updatedUser.getPassword());
         user.setUsername(updatedUser.getUsername());
+
+        Address address = addressRepository.findById(updatedUser.getAddressId())
+                .orElseThrow(() -> new ResourceNotFoundException("Address is not exists with id: " +  + updatedUser.getAddressId()));
+
+        user.setAddress(address);
 
         User updatedUserObj = userRepository.save(user);
 

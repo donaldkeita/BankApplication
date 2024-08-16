@@ -19,5 +19,5 @@ public class UserDto {
     private String email;
     private String password;
     private String username;
-    private Address address;
+    private Long addressId;
 }

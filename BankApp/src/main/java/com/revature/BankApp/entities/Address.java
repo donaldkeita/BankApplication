@@ -38,13 +38,13 @@ public class Address {
     private User user;
 
 
-    public Address(int streetNumber, String streetName, String city, String state, int zipcode) {
-        this.streetNumber = streetNumber;
-        this.streetName = streetName;
-        this.city = city;
-        this.state = state;
-        this.zipcode = zipcode;
-    }
+//    public Address(int streetNumber, String streetName, String city, String state, int zipcode) {
+//        this.streetNumber = streetNumber;
+//        this.streetName = streetName;
+//        this.city = city;
+//        this.state = state;
+//        this.zipcode = zipcode;
+//    }
 
     public Address(long id, int streetNumber, String streetName, String city, String state, int zipcode) {
         this.id = id;
@@ -54,4 +54,5 @@ public class Address {
         this.state = state;
         this.zipcode = zipcode;
     }
+
 }

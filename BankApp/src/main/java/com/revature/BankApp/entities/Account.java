@@ -24,7 +24,7 @@ public class Account {
     @Column(name = "account_number")
     private long accountNumber;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -14,21 +14,22 @@ public class UserMapper {
                 user.getEmail(),
                 user.getPassword(),
                 user.getUsername(),
-                user.getAddress()
+                user.getAddress().getId()
         );
     }
 
 
     public static User mapToUser(UserDto userDto) {
-        return new User(
-                userDto.getId(),
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getUserType(),
-                userDto.getEmail(),
-                userDto.getPassword(),
-                userDto.getUsername(),
-                userDto.getAddress()
-        );
+
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setUserType(userDto.getUserType());
+        user.setEmail(user.getEmail());
+        user.setPassword(user.getPassword());
+        user.setUsername(user.getUsername());
+
+        return user;
     }
 }

@@ -48,27 +48,4 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Account> accounts;
 
-
-    public User(String firstName, String lastName, UserType userType, String email, String password, String username,
-                Address address) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userType = userType;
-        this.email = email;
-        this.password = password;
-        this.username = username;
-        this.address = address;
-    }
-
-    public User(long id, String firstName, String lastName, UserType userType, String email, String password,
-                String username, Address address) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.userType = userType;
-        this.email = email;
-        this.password = password;
-        this.username = username;
-        this.address = address;
-    }
 }
