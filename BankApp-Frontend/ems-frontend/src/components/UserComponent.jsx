@@ -11,6 +11,9 @@ const UserComponent = () => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
 
+  const [addressId, setAddressId] = useState(''); 
+  const [address, setAddress] = useState('');
+
   const navigator = useNavigate();
 
   const {id} = useParams();
@@ -162,6 +165,17 @@ const UserComponent = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}></input>
               </div>
+
+              {/* <p>
+                <a className="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true" aria-controls="collapseExample">
+                  Add Address
+                </a>
+              </p>
+              <div className="collapse" id="collapseExample">
+                <div className="card card-body">
+                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                </div>
+              </div> */}
 
               <button type="submit" className="btn btn-success mb-2" onClick={(e) => saveOrUpdateUser(e)}>Submit</button>
             </form>
