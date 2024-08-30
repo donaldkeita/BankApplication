@@ -1,0 +1,32 @@
+details {
+    font:
+      16px "Open Sans",
+      Calibri,
+      sans-serif;
+    width: 620px;
+  }
+  
+  details > summary {
+    padding: 2px 6px;
+    width: 15em;
+    background-color: #ddd;
+    border: none;
+    box-shadow: 3px 3px 4px black;
+    cursor: pointer;
+    list-style: none;
+    margin-bottom: 15px;
+  }
+  
+  details > p {
+    border-radius: 0 0 10px 10px;
+    background-color: yellowgreen;
+    padding: 2px 6px;
+    margin-bottom: 15px;
+    box-shadow: 3px 3px 4px black;
+  }
+
+  .content {
+    background-color: yellowgreen;
+    margin-bottom: 15px;
+  }
+  

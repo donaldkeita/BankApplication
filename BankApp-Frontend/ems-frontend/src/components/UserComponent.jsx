@@ -1,6 +1,7 @@
-import React, {useState, useEffect } from 'react'
+import React, {useState, useEffect, Component } from 'react'
 import { createUser, getUserById, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
+import './UserComponent.css'
 
 const UserComponent = () => {
 
@@ -18,23 +19,34 @@ const UserComponent = () => {
 
   const {id} = useParams();
 
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    userType: '',
+    email: '',
+    password: '',
+    username: ''
+  })
+
   useEffect(() => {
 
-    getUserById(id).then((response) => {
-      setFirstName(response.data.firstName);
-      setLastName(response.data.lastName);
-      setUserType(response.data.userType);
-      setEmail(response.data.email);
-      setPassword(response.data.password);
-      setUsername(response.data.username);
-    }).catch(error => console.error(error))
+    if(id) {
+      getUserById(id).then((response) => {
+        setFirstName(response.data.firstName);
+        setLastName(response.data.lastName);
+        setUserType(response.data.userType);
+        setEmail(response.data.email);
+        setPassword(response.data.password);
+        setUsername(response.data.username);
+      }).catch(error => console.error(error))
+    }
     
   }, [id])
 
   function saveOrUpdateUser(e) {
     e.preventDefault();
 
-    const user = {firstName, lastName, userType, email, password, username}
+    const user = {firstName, lastName, userType, email, password, username, addressId}
 
     console.log(user);
 
@@ -51,6 +63,8 @@ const UserComponent = () => {
       }).catch(error => console.error(error))
     }
   }
+
+
 
   function pageTitle() {
     if (id) {
@@ -166,16 +180,11 @@ const UserComponent = () => {
                   onChange={(e) => setPassword(e.target.value)}></input>
               </div>
 
-              {/* <p>
-                <a className="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true" aria-controls="collapseExample">
-                  Add Address
-                </a>
-              </p>
-              <div className="collapse" id="collapseExample">
-                <div className="card card-body">
-                  Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                </div>
-              </div> */}
+              <details>
+                <summary>Enter Address</summary>
+                <div><span className='content'>Something small enough to escape casual notice.</span></div> <br/>
+                
+              </details>
 
               <button type="submit" className="btn btn-success mb-2" onClick={(e) => saveOrUpdateUser(e)}>Submit</button>
             </form>
