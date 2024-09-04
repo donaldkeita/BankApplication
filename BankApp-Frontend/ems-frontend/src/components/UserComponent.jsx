@@ -2,6 +2,7 @@ import React, {useState, useEffect, Component } from 'react'
 import { createUser, getUserById, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
 import './UserComponent.css'
+import { createAddress } from '../services/AddressService';
 
 const UserComponent = () => {
 
@@ -54,7 +55,11 @@ const UserComponent = () => {
 
     const user = {firstName, lastName, userType, email, password, username, addressId}
 
+    const address = {streetNumber, streetName, city, state, zipcode}
+
     console.log(user);
+
+    console.log(address);
 
     if(id) {
       updateUser(id, user).then((response) => {
@@ -63,6 +68,11 @@ const UserComponent = () => {
       }).catch((error) => console.error(error))
     }
     else {
+      createAddress(address).then((response) => {
+        setAddressId(response.data.id)
+        console.log(response.data);   
+      }).catch(error => console.error(error))
+
       createUser(user).then((response) => {
         console.log(response.data);
         navigator('/users')
@@ -191,7 +201,7 @@ const UserComponent = () => {
                 <div className='row'>
                   <div className="form-group">
                   <label className='form-label' htmlFor="inputStreetNumber">Street Number:</label>
-                    <input type="text" className="form-control" id="inputStreetNumber" placeholder="1234"
+                    <input type='number' className="form-control" id="inputStreetNumber" placeholder="1234"
                       value={streetNumber}
                       // className={`form-control ${ errors.streetNumber ? 'is-invalid': ''}`}
                       onChange={(e) => setStreetNumber(e.target.value)}></input>
@@ -211,7 +221,7 @@ const UserComponent = () => {
                     <div className="form-group col-md-6">
                       <label className='form-label' htmlFor="inputCity">City</label>
                       <input type="text" className="form-control" id="inputCity"
-                        value={streetName}
+                        value={city}
                         // className={`form-control ${ errors.streetName ? 'is-invalid': ''}`}
                         onChange={(e) => setCity(e.target.value)}></input>
                     </div>
@@ -219,15 +229,15 @@ const UserComponent = () => {
                       <label className='form-label' htmlFor="inputState">State</label>
                       <select id="inputState" className="form-control"
                         onChange={(e) => setState(e.target.value)}>
-                        <option selected>Choose State</option>
+                        <option value="Select State">Choose State</option>
                         <option value="Maryland">MD</option>
                         <option value="Virginia">VA</option>
                         <option value="New Jersey">NJ</option>
                       </select>
                     </div>
                     <div className="form-group col-md-2">
-                      <label className='form-label' htmlFor="inputZip">Zip</label>
-                      <input type="text" className="form-control" id="inputZip"
+                      <label className='form-label' htmlFor="inputZip">Zipcode</label>
+                      <input type='number' className="form-control" id="inputZip"
                         value={zipcode}
                         // className={`form-control ${ errors.zipcode ? 'is-invalid': ''}`}
                         onChange={(e) => setZipcode(e.target.value)}></input>
