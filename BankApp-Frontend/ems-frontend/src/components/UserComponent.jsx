@@ -12,6 +12,8 @@ const UserComponent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [addressId, setAddressId] = useState(''); 
+  const [address, setAddress] = useState('');
 
   const [streetNumber, setStreetNumber] = useState('');
   const [streetName, setStreetName] = useState('');
@@ -19,8 +21,7 @@ const UserComponent = () => {
   const [state, setState] = useState('');
   const [zipcode, setZipcode] = useState('');
 
-  const [addressId, setAddressId] = useState(''); 
-  const [address, setAddress] = useState('');
+  
 
   const navigator = useNavigate();
 
@@ -50,35 +51,45 @@ const UserComponent = () => {
     
   }, [id])
 
+
+  
+
+ 
   function saveOrUpdateUser(e) {
     e.preventDefault();
-
-    const user = {firstName, lastName, userType, email, password, username, addressId}
-
     const address = {streetNumber, streetName, city, state, zipcode}
+    const user = {firstName, lastName, userType, email, password, username, addressId}
 
     console.log(user);
 
     console.log(address);
 
+
     if(id) {
       updateUser(id, user).then((response) => {
         console.log(response.data)
         navigator('/users');
-      }).catch((error) => console.error(error))
+      }).catch(error => console.error(error))
     }
     else {
       createAddress(address).then((response) => {
-        setAddressId(response.data.id)
-        console.log(response.data);   
+        setAddressId(response.data.id);
+        console.log(address);       
       }).catch(error => console.error(error))
+    }
+  }
 
+
+  useEffect(() => {
+    if (addressId) {
+      const user = {firstName, lastName, userType, email, password, username, addressId}
+      console.log("Show the Id address (addressId) is : " + addressId);
       createUser(user).then((response) => {
         console.log(response.data);
         navigator('/users')
       }).catch(error => console.error(error))
     }
-  }
+  }, [addressId])
 
 
 
