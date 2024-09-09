@@ -13,7 +13,7 @@ const UserComponent = () => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [addressId, setAddressId] = useState(''); 
-  const [address, setAddress] = useState('');
+  
 
   const [streetNumber, setStreetNumber] = useState('');
   const [streetName, setStreetName] = useState('');
@@ -33,7 +33,13 @@ const UserComponent = () => {
     userType: '',
     email: '',
     password: '',
-    username: ''
+    username: '',
+    
+    streetNumber: '',
+    streetName: '',
+    city: '',
+    state: '',
+    zipcode: ''
   })
 
   useEffect(() => {
@@ -51,31 +57,33 @@ const UserComponent = () => {
     
   }, [id])
 
-
-  
-
  
   function saveOrUpdateUser(e) {
     e.preventDefault();
-    const address = {streetNumber, streetName, city, state, zipcode}
-    const user = {firstName, lastName, userType, email, password, username, addressId}
 
-    console.log(user);
+    if (validateForm()) {
 
-    console.log(address);
+      const address = { streetNumber, streetName, city, state, zipcode }
+      const user = { firstName, lastName, userType, email, password, username, addressId }
+
+      console.log(user);
+
+      console.log(address);
 
 
-    if(id) {
-      updateUser(id, user).then((response) => {
-        console.log(response.data)
-        navigator('/users');
-      }).catch(error => console.error(error))
-    }
-    else {
-      createAddress(address).then((response) => {
-        setAddressId(response.data.id);
-        console.log(address);       
-      }).catch(error => console.error(error))
+      if (id) {
+        updateUser(id, user).then((response) => {
+          console.log(response.data)
+          navigator('/users');
+        }).catch(error => console.error(error))
+      }
+      else {
+        createAddress(address).then((response) => {
+          setAddressId(response.data.id);
+          console.log(address);
+        }).catch(error => console.error(error))
+      }
+
     }
   }
 
@@ -90,6 +98,82 @@ const UserComponent = () => {
       }).catch(error => console.error(error))
     }
   }, [addressId])
+
+
+  function validateForm() {
+    let valid = true;
+
+    const errorsCopy = {... errors};
+
+    if (firstName.trim()) errorsCopy.firstName = '';
+    else {
+        valid = false;
+        errorsCopy.firstName = 'First name is required';
+    }
+
+    if (lastName.trim()) errorsCopy.lastName = '';
+    else {
+        valid = false;
+        errorsCopy.lastName = 'Last name is required';
+    }
+
+    if (userType.trim()) errorsCopy.userType = '';
+    else {
+        valid = false;
+        errorsCopy.userType = 'User type is required';
+    }
+
+    if (email.trim()) errorsCopy.email = '';
+    else {
+        valid = false;
+        errorsCopy.email = 'email is required';
+    }
+
+    if (password.trim()) errorsCopy.password = '';
+    else {
+        valid = false;
+        errorsCopy.password = 'Password is required';
+    }
+
+    if (username.trim()) errorsCopy.username = '';
+    else {
+        valid = false;
+        errorsCopy.username = 'Username is required';
+    }
+
+    if (streetNumber.trim()) errorsCopy.streetNumber = '';
+    else {
+        valid = false;
+        errorsCopy.streetNumber = 'Street number is required';
+    }
+
+    if (streetName.trim()) errorsCopy.streetName = '';
+    else {
+        valid = false;
+        errorsCopy.streetName = 'Street name is required';
+    }
+
+    if (city.trim()) errorsCopy.city = '';
+    else {
+        errorsCopy.city = 'City is required';
+        valid = false;
+    }
+
+    if (state.trim()) errorsCopy.state = '';
+    else {
+        errorsCopy.state = 'State is required';
+        valid = false;
+    }
+
+    if (zipcode.trim()) errorsCopy.zipcode = '';
+    else {           
+        errorsCopy.zipcode = 'Zipcode is required';
+        valid = false;
+    }
+
+    setErrors(errorsCopy);
+    return valid;
+}
 
 
 
@@ -212,16 +296,16 @@ const UserComponent = () => {
                 <div className='row'>
                   <div className="form-group">
                   <label className='form-label' htmlFor="inputStreetNumber">Street Number:</label>
-                    <input type='number' className="form-control" id="inputStreetNumber" placeholder="1234"
+                    <input type='number' id="inputStreetNumber" placeholder="1234"
                       value={streetNumber}
-                      // className={`form-control ${ errors.streetNumber ? 'is-invalid': ''}`}
+                      className={`form-control ${ errors.streetNumber ? 'is-invalid': ''}`}
                       onChange={(e) => setStreetNumber(e.target.value)}></input>
                   </div>
                   <div className="form-group">
                   <label className='form-label' htmlFor="inputAddressName">Street Number:</label>
-                    <input type="text" className="form-control" id="inputAddressName" placeholder="Main St"
+                    <input type="text" id="inputAddressName" placeholder="Main St"
                       value={streetName}
-                      // className={`form-control ${ errors.streetNumber ? 'is-invalid': ''}`}
+                      className={`form-control ${ errors.streetNumber ? 'is-invalid': ''}`}
                       onChange={(e) => setStreetName(e.target.value)}></input>
                   </div>
                   <div className="form-group">
@@ -231,14 +315,14 @@ const UserComponent = () => {
                   <div className="row">
                     <div className="form-group col-md-6">
                       <label className='form-label' htmlFor="inputCity">City</label>
-                      <input type="text" className="form-control" id="inputCity"
+                      <input type="text" id="inputCity"
                         value={city}
-                        // className={`form-control ${ errors.streetName ? 'is-invalid': ''}`}
+                        className={`form-control ${ errors.streetName ? 'is-invalid': ''}`}
                         onChange={(e) => setCity(e.target.value)}></input>
                     </div>
                     <div className="form-group col-md-3">
                       <label className='form-label' htmlFor="inputState">State</label>
-                      <select id="inputState" className="form-control"
+                      <select id="inputState" className={`form-control ${ errors.state ? 'is-invalid': ''}`}
                         onChange={(e) => setState(e.target.value)}>
                         <option value="Select State">Choose State</option>
                         <option value="Maryland">MD</option>
@@ -248,9 +332,9 @@ const UserComponent = () => {
                     </div>
                     <div className="form-group col-md-2">
                       <label className='form-label' htmlFor="inputZip">Zipcode</label>
-                      <input type='number' className="form-control" id="inputZip"
+                      <input type='number' id="inputZip"
                         value={zipcode}
-                        // className={`form-control ${ errors.zipcode ? 'is-invalid': ''}`}
+                        className={`form-control ${ errors.zipcode ? 'is-invalid': ''}`}
                         onChange={(e) => setZipcode(e.target.value)}></input>
                     </div>
                   </div>
