@@ -52,8 +52,8 @@ const AddressComponent = () => {
 
         if (streetNumber.trim()) errorsCopy.streetNumber = '';
         else {
-            valid = false;
             errorsCopy.streetNumber = 'Street number is required';
+            valid = false;   
         }
 
         if (streetName.trim()) errorsCopy.streetName = '';

@@ -90,7 +90,7 @@ const UserComponent = () => {
 
   useEffect(() => {
     if (addressId) {
-      const user = {firstName, lastName, userType, email, password, username, addressId}
+      const user = { firstName, lastName, userType, email, password, username, addressId }
       console.log("Show the Id address (addressId) is : " + addressId);
       createUser(user).then((response) => {
         console.log(response.data);
@@ -106,15 +106,15 @@ const UserComponent = () => {
     const errorsCopy = {... errors};
 
     if (firstName.trim()) errorsCopy.firstName = '';
-    else {
-        valid = false;
+    else {    
         errorsCopy.firstName = 'First name is required';
+        valid = false;
     }
 
     if (lastName.trim()) errorsCopy.lastName = '';
-    else {
-        valid = false;
+    else {   
         errorsCopy.lastName = 'Last name is required';
+        valid = false;
     }
 
     if (userType.trim()) errorsCopy.userType = '';
@@ -124,9 +124,9 @@ const UserComponent = () => {
     }
 
     if (email.trim()) errorsCopy.email = '';
-    else {
-        valid = false;
+    else {      
         errorsCopy.email = 'email is required';
+        valid = false;
     }
 
     if (password.trim()) errorsCopy.password = '';
@@ -203,25 +203,27 @@ const UserComponent = () => {
                   <label className='form-label' htmlFor="inputFirstName4">First Name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${ errors.firstName ? 'is-invalid': ''}`}
                     id="inputFirstName4"
                     placeholder="Enter first name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   >
                   </input>
+                  {errors.firstName && <div className='invalid-feedback'> { errors.firstName}</div> }
                 </div>
                 <div className="form-group mb-3 col-md-6">
                   <label className='form-label' htmlFor="inputLastName4">Last Name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={`form-control ${ errors.lastName ? 'is-invalid': ''}`}
                     id="inputLastName4"
                     placeholder="Enter last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                   >
                   </input>
+                  {errors.lastName && <div className='invalid-feedback'> { errors.lastName}</div> }
                 </div>
               </div>
               <fieldset className="form-group">
@@ -230,7 +232,7 @@ const UserComponent = () => {
                   <div className="col-sm-10">
                     <div className="form-check">
                       <input
-                        className="form-check-input"
+                        className={`form-check-input ${ errors.userType ? 'is-invalid': ''}`}
                         type="radio"
                         name="userType"
                         id="userType1"
@@ -242,7 +244,7 @@ const UserComponent = () => {
                     </div>
                     <div className="form-check">
                       <input
-                        className="form-check-input"
+                        className={`form-check-input ${ errors.userType ? 'is-invalid': ''}`}
                         type="radio"
                         name="userType"
                         id="userType2"
@@ -251,6 +253,7 @@ const UserComponent = () => {
                       >
                       </input>
                       <label className="form-check-label" htmlFor="userType2">Customer</label>
+                      {errors.userType && <div className='invalid-feedback'> { errors.userType}</div> }
                     </div>
                   </div>
                 </div>
@@ -260,35 +263,38 @@ const UserComponent = () => {
                 <label className='form-label' htmlFor="inputUsername4">Username</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${ errors.username ? 'is-invalid': ''}`}
                   id="inputUsername4"
                   placeholder="Enter Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 >
                 </input>
+                {errors.username && <div className='invalid-feedback'> { errors.username}</div> }
               </div>
               <div className="form-group mt-3 mb-3 col-md-12">
                 <label className='form-label' htmlFor="inputEmail4">Email</label>
                 <input
                   type="email"
-                  className="form-control"
+                  className={`form-control ${ errors.email ? 'is-invalid': ''}`}
                   id="inputEmail4"
                   placeholder="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 >
                 </input>
+                {errors.email && <div className='invalid-feedback'> { errors.email}</div> }
               </div>
               <div className="form-group mb-3 col-md-12">
                 <label className='form-label' htmlFor="inputPassword4">Password</label>
                 <input
                   type="password"
-                  className="form-control"
+                  className={`form-control ${ errors.password ? 'is-invalid': ''}`}
                   id="inputPassword4"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}></input>
+                  {errors.password && <div className='invalid-feedback'> { errors.password}</div> }
               </div>
 
               <details>
@@ -296,17 +302,24 @@ const UserComponent = () => {
                 <div className='row'>
                   <div className="form-group">
                   <label className='form-label' htmlFor="inputStreetNumber">Street Number:</label>
-                    <input type='number' id="inputStreetNumber" placeholder="1234"
+                    <input
+                      type='number'
+                      placeholder='Enter street number'
+                      name='streetNumber'
                       value={streetNumber}
-                      className={`form-control ${ errors.streetNumber ? 'is-invalid': ''}`}
-                      onChange={(e) => setStreetNumber(e.target.value)}></input>
+                      className={`form-control ${errors.streetNumber ? 'is-invalid' : ''}`}
+                      onChange={(e) => setStreetNumber(e.target.value)}
+                    >
+                    </input>
+                    {errors.streetNumber && <div className='invalid-feedback'> { errors.streetNumber}</div> }
                   </div>
                   <div className="form-group">
-                  <label className='form-label' htmlFor="inputAddressName">Street Number:</label>
+                  <label className='form-label' htmlFor="inputAddressName">Street Name:</label>
                     <input type="text" id="inputAddressName" placeholder="Main St"
                       value={streetName}
                       className={`form-control ${ errors.streetNumber ? 'is-invalid': ''}`}
                       onChange={(e) => setStreetName(e.target.value)}></input>
+                      {errors.streetName && <div className='invalid-feedback'> { errors.streetName}</div> }
                   </div>
                   <div className="form-group">
                     <label className='form-label' htmlFor="inputAddress2">Address 2</label>
@@ -319,6 +332,7 @@ const UserComponent = () => {
                         value={city}
                         className={`form-control ${ errors.streetName ? 'is-invalid': ''}`}
                         onChange={(e) => setCity(e.target.value)}></input>
+                        {errors.city && <div className='invalid-feedback'> { errors.city}</div> }
                     </div>
                     <div className="form-group col-md-3">
                       <label className='form-label' htmlFor="inputState">State</label>
@@ -329,6 +343,7 @@ const UserComponent = () => {
                         <option value="Virginia">VA</option>
                         <option value="New Jersey">NJ</option>
                       </select>
+                      {errors.state && <div className='invalid-feedback'> { errors.state}</div> }
                     </div>
                     <div className="form-group col-md-2">
                       <label className='form-label' htmlFor="inputZip">Zipcode</label>
@@ -336,6 +351,7 @@ const UserComponent = () => {
                         value={zipcode}
                         className={`form-control ${ errors.zipcode ? 'is-invalid': ''}`}
                         onChange={(e) => setZipcode(e.target.value)}></input>
+                        {errors.zipcode && <div className='invalid-feedback'> { errors.zipcode}</div> }
                     </div>
                   </div>
 
