@@ -2,7 +2,7 @@ import React, {useState, useEffect, Component } from 'react'
 import { createUser, getUserById, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
 import './UserComponent.css'
-import { createAddress } from '../services/AddressService';
+import { createAddress, getAddress } from '../services/AddressService';
 
 const UserComponent = () => {
 
@@ -52,7 +52,18 @@ const UserComponent = () => {
         setEmail(response.data.email);
         setPassword(response.data.password);
         setUsername(response.data.username);
+        //setAddressId(response.data.addressId);
+
+        getAddress(response.data.addressId).then((resp) => {
+          setStreetNumber(resp.data.streetNumber);
+          setStreetName(resp.data.streetName);
+          setCity(resp.data.city);
+          setState(resp.data.state);
+          setZipcode(resp.data.zipcode);
+        }).catch(error => console.error(error))
+
       }).catch(error => console.error(error))
+
     }
     
   }, [id])
@@ -186,6 +197,12 @@ const UserComponent = () => {
     }
   }
 
+  function shouldBeChecked() {
+    if(id && userType) {
+      return 'checked'
+    }
+  }
+
 
   return (
     <div className='container mb-5'>
@@ -237,6 +254,7 @@ const UserComponent = () => {
                         name="userType"
                         id="userType1"
                         value="ADMIN"
+                        
                         onChange={(e) => setUserType(e.target.value)}
                       >
                       </input>
@@ -248,7 +266,7 @@ const UserComponent = () => {
                         type="radio"
                         name="userType"
                         id="userType2"
-                        value="CUSTOMER"
+                        value='CUSTOMER'
                         onChange={(e) => setUserType(e.target.value)}
                       >
                       </input>
@@ -338,10 +356,11 @@ const UserComponent = () => {
                       <label className='form-label' htmlFor="inputState">State</label>
                       <select id="inputState" className={`form-control ${ errors.state ? 'is-invalid': ''}`}
                         onChange={(e) => setState(e.target.value)}>
-                        <option value="Select State">Choose State</option>
+                        <option value="Select State">{id ? state : 'Choose State'}</option>
                         <option value="Maryland">MD</option>
                         <option value="Virginia">VA</option>
                         <option value="New Jersey">NJ</option>
+                        <option value={state}></option>
                       </select>
                       {errors.state && <div className='invalid-feedback'> { errors.state}</div> }
                     </div>
