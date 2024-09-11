@@ -2,7 +2,7 @@ import React, {useState, useEffect, Component } from 'react'
 import { createUser, getUserById, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
 import './UserComponent.css'
-import { createAddress, getAddress } from '../services/AddressService';
+import { createAddress, getAddress, updateAddress } from '../services/AddressService';
 
 const UserComponent = () => {
 
@@ -20,6 +20,8 @@ const UserComponent = () => {
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zipcode, setZipcode] = useState('');
+
+  const [updated, setUpdated] = useState(false);
 
   
 
@@ -55,6 +57,7 @@ const UserComponent = () => {
         //setAddressId(response.data.addressId);
 
         getAddress(response.data.addressId).then((resp) => {
+          //setAddressId(resp.data.id);
           setStreetNumber(resp.data.streetNumber);
           setStreetName(resp.data.streetName);
           setCity(resp.data.city);
@@ -68,6 +71,7 @@ const UserComponent = () => {
     
   }, [id])
 
+  //let updated = false;
  
   function saveOrUpdateUser(e) {
     e.preventDefault();
@@ -84,8 +88,9 @@ const UserComponent = () => {
 
       if (id) {
         updateUser(id, user).then((response) => {
+          setUpdated(true);
+          setAddressId(response.data.id);
           console.log(response.data)
-          navigator('/users');
         }).catch(error => console.error(error))
       }
       else {
@@ -94,21 +99,42 @@ const UserComponent = () => {
           console.log(address);
         }).catch(error => console.error(error))
       }
-
     }
   }
 
 
   useEffect(() => {
+    
     if (addressId) {
-      const user = { firstName, lastName, userType, email, password, username, addressId }
-      console.log("Show the Id address (addressId) is : " + addressId);
-      createUser(user).then((response) => {
-        console.log(response.data);
-        navigator('/users')
-      }).catch(error => console.error(error))
+      console.log('User is updated? :' + updated)
+      if (updated) {
+        const address = { streetNumber, streetName, city, state, zipcode }
+        updateAddress(addressId, address).then((response) => {
+          console.log(response.data);
+          navigator('/users');
+        }).catch(error => console.error(error))
+      }
+      else {
+        const user = { firstName, lastName, userType, email, password, username, addressId }
+        console.log("Show the Id address (addressId) is : " + addressId);
+        createUser(user).then((response) => {
+          console.log(response.data);
+          navigator('/users')
+        }).catch(error => console.error(error))
+      }
+
     }
-  }, [addressId])
+  }, [addressId, updated])
+
+  // useEffect(() => {
+  //   const address = { streetNumber, streetName, city, state, zipcode }
+  //   if(addressId && id) {
+  //     updateAddress(addressId, address).then((response) => {
+  //       console.log(response.data);
+  //       navigator('/users');
+  //     }).catch(error => console.error(error))
+  //   }
+  // }, [addressId])
 
 
   function validateForm() {
