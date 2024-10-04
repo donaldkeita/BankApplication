@@ -1,8 +1,9 @@
-import React, {useState, useEffect, Component } from 'react'
+import React, {useState, useEffect, useRef, Component } from 'react'
 import { createUser, getUserById, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
 import './UserComponent.css'
 import { createAddress, getAddress, updateAddress } from '../services/AddressService';
+import _ from 'lodash';
 
 const UserComponent = () => {
 
@@ -14,16 +15,19 @@ const UserComponent = () => {
   const [username, setUsername] = useState('');
   const [addressId, setAddressId] = useState(''); 
   
-
+  const [addrId, setAddrId] = useState('');
   const [streetNumber, setStreetNumber] = useState('');
   const [streetName, setStreetName] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zipcode, setZipcode] = useState('');
 
-  const [updated, setUpdated] = useState(false);
 
+  const user = useRef(null);
+  const address = useRef(null);
   
+  const prevUser = useRef(null);
+  const prevAddress = useRef(null);
 
   const navigator = useNavigate();
 
@@ -44,58 +48,56 @@ const UserComponent = () => {
     zipcode: ''
   })
 
+
   useEffect(() => {
-
-    if(id) {
+    console.log("Inside First UseEffect");
+    if (id) {
+      console.log("Inside First UseEffect. After If statement");
       getUserById(id).then((response) => {
-        setFirstName(response.data.firstName);
-        setLastName(response.data.lastName);
-        setUserType(response.data.userType);
-        setEmail(response.data.email);
-        setPassword(response.data.password);
-        setUsername(response.data.username);
-        //setAddressId(response.data.addressId);
-
-        getAddress(response.data.addressId).then((resp) => {
-          //setAddressId(resp.data.id);
-          setStreetNumber(resp.data.streetNumber);
-          setStreetName(resp.data.streetName);
-          setCity(resp.data.city);
-          setState(resp.data.state);
-          setZipcode(resp.data.zipcode);
+        setFirstName(response.data.firstName); ////////////
+        setLastName(response.data.lastName);  ///////////
+        setUserType(response.data.userType);   /////////
+        setEmail(response.data.email);   /////////
+        setPassword(response.data.password);  ////////
+        setUsername(response.data.username);  ///////
+        setAddressId(response.data.addressId);  //////
+        getAddress(response.data.addressId).then((resp) => {     
+          setStreetNumber(resp.data.streetNumber);   ///////
+          setStreetName(resp.data.streetName);   /////////
+          setCity(resp.data.city);   //////////
+          setState(resp.data.state);   ////////
+          setZipcode(resp.data.zipcode);   /////////
         }).catch(error => console.error(error))
 
       }).catch(error => console.error(error))
-
     }
-    
   }, [id])
 
-  //let updated = false;
+  if ((prevUser.current === null) && (prevAddress.current === null) && id) {
+    prevUser.current = { firstName, lastName, userType, email, password, username, addressId };
+    prevAddress.current = {streetNumber, streetName, city, state, zipcode };
+  }
+
  
   function saveOrUpdateUser(e) {
     e.preventDefault();
 
     if (validateForm()) {
-
-      const address = { streetNumber, streetName, city, state, zipcode }
-      const user = { firstName, lastName, userType, email, password, username, addressId }
-
-      console.log(user);
-
+      if (address.current === null) {
+        address.current = {streetNumber, streetName, city, state, zipcode };
+      }
       console.log(address);
 
-
       if (id) {
-        updateUser(id, user).then((response) => {
-          setUpdated(true);
-          setAddressId(response.data.id);
-          console.log(response.data)
+        updateAddress(addressId, address.current).then((response) => {
+          console.log(response.data);
+          setAddrId(response.data.id);
         }).catch(error => console.error(error))
       }
       else {
-        createAddress(address).then((response) => {
+        createAddress(address.current).then((response) => {
           setAddressId(response.data.id);
+          setAddrId(response.data.id);
           console.log(address);
         }).catch(error => console.error(error))
       }
@@ -104,37 +106,32 @@ const UserComponent = () => {
 
 
   useEffect(() => {
-    
-    if (addressId) {
-      console.log('User is updated? :' + updated)
-      if (updated) {
-        const address = { streetNumber, streetName, city, state, zipcode }
-        updateAddress(addressId, address).then((response) => {
+    console.log("Inside Second UseEffect");
+    console.log(addrId);
+    if (addrId) {
+      console.log("Inside Second UseEffect. After if (addrId)");
+      if (user.current === null) {
+        user.current = { firstName, lastName, userType, email, password, username, addressId };
+      }
+      if ((prevUser.current != null) && (prevAddress.current != null)) {
+        console.log("I am inside ((user != null) && (address != null))");
+        if (!((JSON.stringify(address.current) === JSON.stringify(prevAddress.current)) && (JSON.stringify(user.current) === JSON.stringify(prevUser.current))))
+          console.log(user);
+          console.log(id);
+        updateUser(id, user.current).then((response) => {
           console.log(response.data);
           navigator('/users');
         }).catch(error => console.error(error))
       }
       else {
-        const user = { firstName, lastName, userType, email, password, username, addressId }
-        console.log("Show the Id address (addressId) is : " + addressId);
-        createUser(user).then((response) => {
+        console.log(user);
+        createUser(user.current).then((response) => {
           console.log(response.data);
           navigator('/users')
         }).catch(error => console.error(error))
       }
-
     }
-  }, [addressId, updated])
-
-  // useEffect(() => {
-  //   const address = { streetNumber, streetName, city, state, zipcode }
-  //   if(addressId && id) {
-  //     updateAddress(addressId, address).then((response) => {
-  //       console.log(response.data);
-  //       navigator('/users');
-  //     }).catch(error => console.error(error))
-  //   }
-  // }, [addressId])
+  }, [addrId])
 
 
   function validateForm() {
@@ -147,62 +144,52 @@ const UserComponent = () => {
         errorsCopy.firstName = 'First name is required';
         valid = false;
     }
-
     if (lastName.trim()) errorsCopy.lastName = '';
     else {   
         errorsCopy.lastName = 'Last name is required';
         valid = false;
     }
-
     if (userType.trim()) errorsCopy.userType = '';
     else {
         valid = false;
         errorsCopy.userType = 'User type is required';
     }
-
     if (email.trim()) errorsCopy.email = '';
     else {      
         errorsCopy.email = 'email is required';
         valid = false;
     }
-
     if (password.trim()) errorsCopy.password = '';
     else {
         valid = false;
         errorsCopy.password = 'Password is required';
     }
-
     if (username.trim()) errorsCopy.username = '';
     else {
         valid = false;
         errorsCopy.username = 'Username is required';
     }
-
-    if (streetNumber.trim()) errorsCopy.streetNumber = '';
+    if (streetNumber.toString().trim()) errorsCopy.streetNumber = '';
     else {
         valid = false;
         errorsCopy.streetNumber = 'Street number is required';
     }
-
     if (streetName.trim()) errorsCopy.streetName = '';
     else {
         valid = false;
         errorsCopy.streetName = 'Street name is required';
     }
-
     if (city.trim()) errorsCopy.city = '';
     else {
         errorsCopy.city = 'City is required';
         valid = false;
     }
-
     if (state.trim()) errorsCopy.state = '';
     else {
         errorsCopy.state = 'State is required';
         valid = false;
     }
-
-    if (zipcode.trim()) errorsCopy.zipcode = '';
+    if (zipcode.toString().trim()) errorsCopy.zipcode = '';
     else {           
         errorsCopy.zipcode = 'Zipcode is required';
         valid = false;
@@ -228,6 +215,10 @@ const UserComponent = () => {
       return 'checked'
     }
   }
+
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   return (
