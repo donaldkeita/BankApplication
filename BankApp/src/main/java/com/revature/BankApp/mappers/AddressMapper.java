@@ -21,14 +21,26 @@ public class AddressMapper {
 
 
     public static Address mapToAddress(AddressDto addressDto) {
-        return new Address(
-                addressDto.getId(),
-                addressDto.getStreetNumber(),
-                addressDto.getStreetName(),
-                addressDto.getCity(),
-                addressDto.getState(),
-                addressDto.getZipcode()
-        );
+
+        Address address = new Address();
+
+        address.setId(addressDto.getId());
+        address.setStreetNumber(addressDto.getStreetNumber());
+        address.setStreetName(addressDto.getStreetName());
+        address.setCity(addressDto.getCity());
+        address.setState(addressDto.getState());
+        address.setZipcode(addressDto.getZipcode());
+
+        return address;
+
+//        return new Address(
+//                addressDto.getId(),
+//                addressDto.getStreetNumber(),
+//                addressDto.getStreetName(),
+//                addressDto.getCity(),
+//                addressDto.getState(),
+//                addressDto.getZipcode()
+//        );
     }
 
 }

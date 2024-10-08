@@ -11,6 +11,7 @@ import com.revature.BankApp.repositories.AddressRepository;
 import com.revature.BankApp.repositories.UserRepository;
 import com.revature.BankApp.services.UserInterface;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +25,13 @@ public class UserService implements UserInterface {
 
     private AddressRepository addressRepository;
 
+    private ModelMapper modelMapper;
+
+
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = UserMapper.mapToUser(userDto);
+
+        User user = modelMapper.map(userDto, User.class);  // <--->  User user = UserMapper.mapToUser(userDto);
 
         Address address = addressRepository.findById(userDto.getAddressId())
                 .orElseThrow(() -> new ResourceNotFoundException("Address is not exists with id: " +  + userDto.getAddressId()));
@@ -34,7 +39,7 @@ public class UserService implements UserInterface {
         user.setAddress(address);
 
         User savedUser = userRepository.save(user);
-        return UserMapper.mapToUserDto(savedUser);
+        return modelMapper.map(savedUser, UserDto.class);
     }
 
     @Override
@@ -43,13 +48,13 @@ public class UserService implements UserInterface {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User is not exists with given id: " + userId));
 
-        return UserMapper.mapToUserDto(user);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(UserMapper::mapToUserDto)  // method references
+        return users.stream().map((user) -> modelMapper.map(user, UserDto.class))  // method references
                 .collect(Collectors.toList());
     }
 
@@ -73,7 +78,7 @@ public class UserService implements UserInterface {
 
         User updatedUserObj = userRepository.save(user);
 
-        return UserMapper.mapToUserDto(updatedUserObj);
+        return modelMapper.map(updatedUserObj, UserDto.class);
     }
 
     @Override

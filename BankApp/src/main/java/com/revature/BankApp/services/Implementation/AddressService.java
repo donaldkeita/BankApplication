@@ -9,6 +9,7 @@ import com.revature.BankApp.mappers.UserMapper;
 import com.revature.BankApp.repositories.AddressRepository;
 import com.revature.BankApp.services.AddressInterface;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +21,13 @@ import java.util.stream.Collectors;
 public class AddressService implements AddressInterface {
 
     private AddressRepository addressRepository;
+    private ModelMapper modelMapper;
 
     @Override
     public AddressDto createAddress(AddressDto addressDto) {
-        Address address = AddressMapper.mapToAddress(addressDto);
+        Address address = modelMapper.map(addressDto, Address.class);
         Address savedAddress = addressRepository.save(address);
-        return AddressMapper.mapToAddressDto(savedAddress);
+        return modelMapper.map(savedAddress, AddressDto.class);
     }
 
     @Override
@@ -34,13 +36,13 @@ public class AddressService implements AddressInterface {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Address is not exists with given id : " + addressId));
 
-        return AddressMapper.mapToAddressDto(address);
+        return modelMapper.map(address, AddressDto.class);
     }
 
     @Override
     public List<AddressDto> getAllAddresses() {
         List<Address> addresses = addressRepository.findAll();
-        return addresses.stream().map((address) -> AddressMapper.mapToAddressDto(address))  // => map(AddressMapper::mapToAddressDto)
+        return addresses.stream().map((address) -> modelMapper.map(address, AddressDto.class))  // => map(AddressMapper::mapToAddressDto)
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +59,7 @@ public class AddressService implements AddressInterface {
 
         Address updatedAddressObj = addressRepository.save(address);
 
-        return AddressMapper.mapToAddressDto(updatedAddressObj);
+        return modelMapper.map(updatedAddressObj, AddressDto.class);
     }
 
     @Override
@@ -65,9 +67,6 @@ public class AddressService implements AddressInterface {
 
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new ResourceNotFoundException("Address is not exists with given id : " + addressId));
-
-//        boolean exist = addressRepository.existsById(addressId);
-//        if (!exist) throw new ResourceNotFoundException("Address is not exists with given id : " + addressId);
 
         addressRepository.deleteById(addressId);
     }
