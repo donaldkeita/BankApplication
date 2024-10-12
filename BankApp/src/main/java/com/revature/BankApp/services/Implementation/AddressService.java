@@ -43,7 +43,7 @@ public class AddressService implements AddressInterface {
     public List<AddressDto> getAllAddresses() {
         List<Address> addresses = addressRepository.findAll();
         return addresses.stream().map((address) -> modelMapper.map(address, AddressDto.class))  // => map(AddressMapper::mapToAddressDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); // map((address) -> AddressMapper.mapToAddressDto(address))
     }
 
     @Override
