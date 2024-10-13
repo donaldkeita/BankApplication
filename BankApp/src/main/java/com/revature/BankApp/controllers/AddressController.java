@@ -9,6 +9,7 @@ import com.revature.BankApp.services.Implementation.AddressService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class AddressController {
 
     private AddressService addressService;
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<AddressDto> createUser(@RequestBody AddressDto addressDto) {
         //System.out.println("printing the addressDto object: " + addressDto);
@@ -33,6 +34,7 @@ public class AddressController {
         return new ResponseEntity<>(savedAddress, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("{id}")
     public ResponseEntity<AddressDto> getAddressById(@PathVariable("id") Long addressId) {
         AddressDto addressDto = addressService.getAddressById(addressId);
@@ -41,6 +43,7 @@ public class AddressController {
 
 
     // Build Get All Addresses REST API
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<AddressDto>> getAllAddresses() {
         List<AddressDto> addressesDto = addressService.getAllAddresses();
@@ -49,6 +52,7 @@ public class AddressController {
 
 
     //Build Update Address REST API
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("{id}")
     public ResponseEntity<AddressDto> updateAddress(@PathVariable("id") Long addressId,
                                                     @RequestBody AddressDto updateAddress) {
@@ -57,6 +61,7 @@ public class AddressController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAddress(@PathVariable("id") Long addressId) {
         addressService.deleteAddress(addressId);
