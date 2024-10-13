@@ -39,7 +39,7 @@ public class UserController {
 
     // Build Get All Users REST API
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllAddresses() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> usersDto = userService.getAllUsers();
         return ResponseEntity.ok(usersDto);
     }
