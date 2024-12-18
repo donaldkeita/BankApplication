@@ -4,6 +4,7 @@ import com.revature.BankApp.dto.AddressDto;
 import com.revature.BankApp.entities.Address;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AddressInterface {
 
@@ -16,5 +17,7 @@ public interface AddressInterface {
     AddressDto updateAddress(Long addressId, AddressDto addressDto);
 
     void deleteAddress(Long addressId);
+
+    AddressDto patchAddress(Long addressId, Map<String, Object> addressFields);
 
 }

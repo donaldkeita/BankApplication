@@ -11,8 +11,11 @@ import com.revature.BankApp.services.AddressInterface;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -69,5 +72,23 @@ public class AddressService implements AddressInterface {
                 .orElseThrow(() -> new ResourceNotFoundException("Address is not exists with given id : " + addressId));
 
         addressRepository.deleteById(addressId);
+    }
+
+    @Override
+    public AddressDto patchAddress(Long addressId, Map<String, Object> addressFields) {
+
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new ResourceNotFoundException("Address is not exists with given id : " + addressId));
+
+        addressFields.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(Address.class, key);
+            assert field != null;
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, address, value);
+        });
+
+        Address patchedAddress = addressRepository.save(address);
+
+        return modelMapper.map(patchedAddress, AddressDto.class);
     }
 }

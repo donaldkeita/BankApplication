@@ -28,7 +28,7 @@ public class AddressController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<AddressDto> createUser(@RequestBody AddressDto addressDto) {
+    public ResponseEntity<AddressDto> createAddress(@RequestBody AddressDto addressDto) {
         //System.out.println("printing the addressDto object: " + addressDto);
         AddressDto savedAddress = addressService.createAddress(addressDto);
         return new ResponseEntity<>(savedAddress, HttpStatus.CREATED);
@@ -52,7 +52,7 @@ public class AddressController {
 
 
     //Build Update Address REST API
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @PutMapping("{id}")
     public ResponseEntity<AddressDto> updateAddress(@PathVariable("id") Long addressId,
                                                     @RequestBody AddressDto updateAddress) {
@@ -61,11 +61,23 @@ public class AddressController {
     }
 
 
+    //Build Delete Address REST API
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAddress(@PathVariable("id") Long addressId) {
         addressService.deleteAddress(addressId);
         return ResponseEntity.ok("Address deleted successfully");
+    }
+
+
+    // Build Patch Address REST API
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
+    @PatchMapping("{id}")
+    public ResponseEntity<AddressDto> patchAddress(@PathVariable("id") Long addressId,
+                                                   @RequestBody Map<String, Object> addressFields) {
+        AddressDto patchedAddressDto = addressService.patchAddress(addressId, addressFields);
+
+        return ResponseEntity.ok(patchedAddressDto);
     }
 
 

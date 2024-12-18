@@ -1,6 +1,6 @@
 package com.revature.BankApp.enumerations;
 
 public enum UserType {
-    ADMIN,
-    CUSTOMER
+    ROLE_ADMIN,
+    ROLE_CUSTOMER
 }

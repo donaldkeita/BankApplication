@@ -1,8 +1,10 @@
 package com.revature.BankApp.services;
 
+import com.revature.BankApp.dto.AddressDto;
 import com.revature.BankApp.dto.UserDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserInterface {
 
@@ -15,4 +17,8 @@ public interface UserInterface {
     UserDto updateUser(Long userId, UserDto updatedUser);
 
     void deleteUser(Long userId);
+
+    UserDto patchUser(Long userId, UserDto patchedUser);
+
+    UserDto patchUser(Long userId, Map<String, Object> userFields);
 }

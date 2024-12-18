@@ -49,7 +49,7 @@ public class UserController {
     }
 
     //Build Update User REST API
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId,
                                                     @RequestBody UserDto updatedUser) {
@@ -63,6 +63,15 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok("User deleted successfully");
+    }
+
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
+    @PatchMapping("{id}")
+    public ResponseEntity<UserDto> patchAddress(@PathVariable("id") Long userId,
+                                                @RequestBody Map<String, Object> userFields) {
+        UserDto patchedUserDto = userService.patchUser(userId, userFields);
+        return ResponseEntity.ok(patchedUserDto);
     }
 
 

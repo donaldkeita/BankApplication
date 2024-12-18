@@ -13,8 +13,11 @@ import com.revature.BankApp.services.UserInterface;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -89,5 +92,29 @@ public class UserService implements UserInterface {
 
         userRepository.deleteById(userId);
 
+    }
+
+    @Override
+    public UserDto patchUser(Long userId, UserDto patchedUser) {
+        return updateUser(userId, patchedUser);
+    }
+
+    @Override
+    public UserDto patchUser(Long userId, Map<String, Object> userFields) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User is not exists with given id : " + userId));
+
+        userFields.forEach((key, value) -> {
+            Field field = ReflectionUtils.findField(User.class, key);
+            assert field != null;
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, user, value);
+        });
+
+        User patchedUser = userRepository.save(user);
+
+        return modelMapper.map(patchedUser, UserDto.class);
     }
 }
