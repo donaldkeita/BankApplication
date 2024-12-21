@@ -1,16 +1,19 @@
 package com.revature.BankApp.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.revature.BankApp.enumerations.UserType;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class RegisterDto {
 
-    private String name;
-    private String username;
+    private String firstName;
+    private String lastName;
+//    private UserType userType;
     private String email;
     private String password;
+    private String username;
+    private Long addressId;
 }

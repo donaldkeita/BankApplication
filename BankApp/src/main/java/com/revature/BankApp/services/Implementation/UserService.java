@@ -75,7 +75,7 @@ public class UserService implements UserInterface {
         user.setUsername(updatedUser.getUsername());
 
         Address address = addressRepository.findById(updatedUser.getAddressId())
-                .orElseThrow(() -> new ResourceNotFoundException("Address is not exists with id: " +  + updatedUser.getAddressId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Address is not exists with id: " + updatedUser.getAddressId()));
 
         user.setAddress(address);
 

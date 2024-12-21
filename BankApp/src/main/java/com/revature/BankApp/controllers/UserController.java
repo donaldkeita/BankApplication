@@ -74,17 +74,4 @@ public class UserController {
         return ResponseEntity.ok(patchedUserDto);
     }
 
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
-
-        Map<String, Object> errorDetails = new HashMap<>();
-
-        errorDetails.put("timestamp", LocalDateTime.now());
-        errorDetails.put("message", ex.getMessage());
-        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
-
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-    }
-
 }
