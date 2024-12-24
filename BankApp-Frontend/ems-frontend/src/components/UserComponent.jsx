@@ -3,7 +3,7 @@ import { createUser, getUserById, updateUser } from '../services/UserService';
 import { useNavigate, useParams } from 'react-router-dom';
 import './UserComponent.css'
 import { createAddress, getAddress, updateAddress } from '../services/AddressService';
-import _ from 'lodash';
+
 
 const UserComponent = () => {
 
@@ -106,18 +106,12 @@ const UserComponent = () => {
 
 
   useEffect(() => {
-    console.log("Inside Second UseEffect");
-    console.log(addrId);
     if (addrId) {
-      console.log("Inside Second UseEffect. After if (addrId)");
       if (user.current === null) {
         user.current = { firstName, lastName, userType, email, password, username, addressId };
       }
       if ((prevUser.current != null) && (prevAddress.current != null)) {
-        console.log("I am inside ((user != null) && (address != null))");
         if (!((JSON.stringify(address.current) === JSON.stringify(prevAddress.current)) && (JSON.stringify(user.current) === JSON.stringify(prevUser.current))))
-          console.log(user);
-          console.log(id);
         updateUser(id, user.current).then((response) => {
           console.log(response.data);
           navigator('/users');

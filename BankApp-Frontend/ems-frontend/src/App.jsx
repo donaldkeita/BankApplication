@@ -7,6 +7,7 @@ import ListAddressComponent from './components/ListAddressComponent'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import ListUserComponent from './components/ListUserComponent'
 import UserComponent from './components/UserComponent'
+import RegisterComponent from './components/RegisterComponent'
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
             <Route path = '/users' element = { <ListUserComponent/> }></Route>
             <Route path = '/add-user' element = { <UserComponent/>}></Route>
             <Route path = '/edit-user/:id' element = { <UserComponent/> }></Route>
+            <Route path='/register' element = { <RegisterComponent/> }></Route>
           </Routes>
         <FooterComponent/>
       </BrowserRouter>
