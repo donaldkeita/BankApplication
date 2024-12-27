@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { createAPIAddress, registerAPICall } from '../services/AuthService';
 
 const RegisterComponent = () => {
 
@@ -107,29 +108,28 @@ const RegisterComponent = () => {
 
   function handleRegistrationForm(e) {
     e.preventDefault();
-    const userProfile = {firstName, lastName, userType, email, password, username}
-    const userAddress = {streetNumber, streetName, city, state, zipcode}
 
+    if (validateForm()) {
+      const userAddress = { streetNumber, streetName, city, state, zipcode }
+
+      console.log(userAddress)
+
+      createAPIAddress(userAddress).then((response) => {
+        setAddressId(response.data.id);
+        console.log(response.data);
+      }).catch(error => console.error(error))
+    }
+  }
+
+
+  useEffect(() => {
+    const userProfile = {firstName, lastName, userType, email, password, username, addressId}
     console.log(userProfile)
-    console.log(userAddress)
-  }
+    registerAPICall(userProfile).then((response) => {
+      console.log(response.data);
+    }).catch(error => console.error(error))
+  }, [addressId])
 
-
-
-  function pageTitle() {
-    if (id) {
-      return <h2 className='text-center'>Update User</h2>
-    }
-    else {
-      return <h2 className='text-center'>Add User</h2>
-    }
-  }
-
-  function shouldBeChecked() {
-    if (id && userType) {
-      return 'checked'
-    }
-  }
 
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ const RegisterComponent = () => {
                             type="radio"
                             name="userType"
                             id="userType1"
-                            value="ADMIN"
+                            value="ROLE_ADMIN"
 
                             onChange={(e) => setUserType(e.target.value)}
                           >
@@ -197,7 +197,7 @@ const RegisterComponent = () => {
                             type="radio"
                             name="userType"
                             id="userType2"
-                            value='CUSTOMER'
+                            value='ROLE_CUSTOMER'
                             onChange={(e) => setUserType(e.target.value)}
                           >
                           </input>
