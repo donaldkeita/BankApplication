@@ -1,6 +1,21 @@
 import axios from "axios"
+import { getToken } from "./AuthService";
+//import { getToken } from '../services/AuthService';
 
 const USER_REST_API_BASE_URL = 'http://localhost:8081/api/users';
+
+
+axios.interceptors.request.use(function (config) {
+ 
+    // add token in the header
+    config.headers['Authorization'] = getToken();
+
+    return config;
+  }, function (error) {
+    // Do something with request error
+    return Promise.reject(error);
+  });
+
 
 export const getAllUsers = () => axios.get(USER_REST_API_BASE_URL);
 

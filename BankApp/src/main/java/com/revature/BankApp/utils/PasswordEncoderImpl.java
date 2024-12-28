@@ -15,6 +15,6 @@ public class PasswordEncoderImpl {
 //
 //        System.out.println(passwordEncoder.encode("pwd3"));   // ----->  customer2
 
-        System.out.println(passwordEncoder.encode("pwd4"));   // ----->  customer2
+//        System.out.println(passwordEncoder.encode("pwd4"));   // ----->  customer2
     }
 }

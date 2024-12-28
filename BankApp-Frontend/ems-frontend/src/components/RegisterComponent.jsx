@@ -127,6 +127,7 @@ const RegisterComponent = () => {
     console.log(userProfile)
     registerAPICall(userProfile).then((response) => {
       console.log(response.data);
+      navigator('/users');
     }).catch(error => console.error(error))
   }, [addressId])
 

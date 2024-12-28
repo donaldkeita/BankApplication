@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { loginAPICall, storeToken } from '../services/AuthService';
+import { useNavigate } from 'react-router-dom';
 
 const LoginComponent = () => {
 
@@ -6,7 +8,7 @@ const LoginComponent = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-
+  const navigator = useNavigate();
 
   const [errors, setErrors] = useState({
         password: '',
@@ -34,19 +36,21 @@ const LoginComponent = () => {
   }
 
 
-
-
   function handleLoginForm(e) {
 
     e.preventDefault();
 
     if (validateForm()) {
-      const loginObj = { username, password };
+  
+      loginAPICall(username, password).then((response) => {
+        console.log(response);
 
-      console.log(loginObj)
+        // create token with username or email, and password
+        const token = 'Basic ' + window.btoa(username + ":" + password);
 
-      loginAPICall(loginObj).then((response) => {
-        console.log(response)
+        storeToken(token);
+
+        navigator('/users');
       }).catch(error => console.error(error))
     }
 

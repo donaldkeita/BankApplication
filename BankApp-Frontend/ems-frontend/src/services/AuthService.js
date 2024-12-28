@@ -12,4 +12,10 @@ export const registerAPICall = (registerObj) => axios.post(AUTH_REST_API_BASE_UR
 
 export const createAPIAddress = (address) => axios.post(AUTH_REST_API_BASE_URL, address);
 
-export const loginAPICall = (loginObj) => axios.post(AUTH_REST_API_BASE_URL + '/login', loginObj);
+export const loginAPICall = (usernameOrEmail, password) => axios.post(AUTH_REST_API_BASE_URL + '/login', {usernameOrEmail, password});
+
+// Store token in localStorage
+export const storeToken = (token) => localStorage.setItem("token", token);
+
+// Get token from localStorage
+export const getToken = () => localStorage.getItem("token");
